@@ -182,6 +182,10 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 8328515650139791440, guid: 40bdc97ace45e1b43beeb94ff823c8b5, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -208,7 +212,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  jumpForce: 7
+  jumpForce: 10
+  groundCheckDistance: 0.1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &561112924
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -269,10 +277,14 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Platform
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 568788935964405407, guid: 0ba67e28fa04a6443a274abe8d1ec08a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6383398421564233705, guid: 0ba67e28fa04a6443a274abe8d1ec08a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1453709406}
   m_SourcePrefab: {fileID: 100100000, guid: 0ba67e28fa04a6443a274abe8d1ec08a, type: 3}
 --- !u!1001 &664581518
 PrefabInstance:
@@ -355,10 +367,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c74a86401f0defa46a42a6a7574ca0d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  moveDistance: 2
-  gameManager: {fileID: 0}
-  platform: {fileID: 0}
+  minHeight: 1
+  maxHeight: 4
+  scaleSpeed: 2
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,11 +616,41 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Platform
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 568788935964405407, guid: 0ba67e28fa04a6443a274abe8d1ec08a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6383398421564233705, guid: 0ba67e28fa04a6443a274abe8d1ec08a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1958477206}
   m_SourcePrefab: {fileID: 100100000, guid: 0ba67e28fa04a6443a274abe8d1ec08a, type: 3}
+--- !u!1 &1453709401 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6383398421564233705, guid: 0ba67e28fa04a6443a274abe8d1ec08a, type: 3}
+  m_PrefabInstance: {fileID: 561112924}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1453709406
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453709401}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 1.5, z: 1.0000004}
+  m_Center: {x: 0.00000005960465, y: 0, z: -0.00000008940698}
 --- !u!1001 &1519072704
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -723,6 +764,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1958477201 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6383398421564233705, guid: 0ba67e28fa04a6443a274abe8d1ec08a, type: 3}
+  m_PrefabInstance: {fileID: 1201049650}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1958477206
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1958477201}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 1.5, z: 1.0000004}
+  m_Center: {x: 0.00000005960465, y: 0, z: -0.00000008940698}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

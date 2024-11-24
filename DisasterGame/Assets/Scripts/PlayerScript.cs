@@ -2,40 +2,55 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+    [Header("Movement Settings")]
+    [SerializeField] private float moveSpeed = 5f;
+
     [Header("Jump Settings")]
-    [SerializeField] private float jumpForce = 7f; // Kekuatan lompatan
-    private bool isGrounded = false; // Apakah player menyentuh lantai?
+    [SerializeField] private float jumpForce = 7f;
+    [SerializeField] private float groundCheckDistance = 0.1f;
+    [SerializeField] private LayerMask groundLayer;
 
     private Rigidbody rb;
 
     void Start()
     {
-        // Ambil komponen Rigidbody
         rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        // Input untuk melompat
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        Move();
+
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         {
             Jump();
         }
     }
 
-    private void Jump()
+    private void Move()
     {
-        // Tambahkan gaya vertikal untuk melompat
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        isGrounded = false; // Hanya bisa melompat sekali sebelum mendarat lagi
+        float horizontalInput = Input.GetAxis("Horizontal");
+        Debug.Log("Horizontal Input: " + horizontalInput); // Debug untuk memastikan input bekerja
+
+        Vector3 moveDirection = new Vector3(horizontalInput, 0, 0) * moveSpeed;
+        rb.velocity = new Vector3(moveDirection.x, rb.velocity.y, rb.velocity.z);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void Jump()
     {
-        // Jika menyentuh platform, set isGrounded menjadi true
-        if (collision.gameObject.CompareTag("Platform"))
-        {
-            isGrounded = true;
-        }
+        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+    }
+
+    private bool IsGrounded()
+    {
+        // Memeriksa apakah karakter berada di atas permukaan tanah menggunakan raycast
+        return Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        // Menampilkan garis untuk mengecek ground saat di editor
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckDistance);
     }
 }
