@@ -3,19 +3,17 @@ using UnityEngine;
 public class ObstacleMovement : MonoBehaviour
 {
     [Header("Scale Settings")]
-    [SerializeField] private float minScale = 1f;
-    [SerializeField] private float maxScale = 4f;
-    [SerializeField] private float scaleSpeed = 2f;
+    [SerializeField] private float minHeight = 1f; // Tinggi minimum tembok
+    [SerializeField] private float maxHeight = 4f; // Tinggi maksimum tembok
+    [SerializeField] private float scaleSpeed = 2f; // Kecepatan perubahan skala
 
-    [Header("References")]
-    [SerializeField] private GameManager gameManager;
-
-    private bool isScalingUp = true;
-    private Vector3 originalScale;
-    private Vector3 originalPosition;
+    private bool isScalingUp = true; // Menentukan arah perubahan skala
+    private Vector3 originalScale; // Skala awal tembok
+    private Vector3 originalPosition; // Posisi awal tembok
 
     void Start()
     {
+        // Simpan skala awal dan posisi awal
         originalScale = transform.localScale;
         originalPosition = transform.position;
     }
@@ -25,36 +23,40 @@ public class ObstacleMovement : MonoBehaviour
         ScaleObstacle();
     }
 
-    void ScaleObstacle()
+    private void ScaleObstacle()
     {
-        // Get current Y scale
-        float currentYScale = transform.localScale.y;
+        // Ambil skala Y saat ini
+        float currentHeight = transform.localScale.y;
 
-        // Calculate new scale
+        // Ubah skala Y (tinggi)
         if (isScalingUp)
         {
-            currentYScale += scaleSpeed * Time.deltaTime;
-            if (currentYScale >= maxScale)
+            currentHeight += scaleSpeed * Time.deltaTime;
+
+            // Jika tinggi mencapai maksimum, ubah arah menjadi mengecil
+            if (currentHeight >= maxHeight)
             {
-                currentYScale = maxScale;
+                currentHeight = maxHeight;
                 isScalingUp = false;
             }
         }
         else
         {
-            currentYScale -= scaleSpeed * Time.deltaTime;
-            if (currentYScale <= minScale)
+            currentHeight -= scaleSpeed * Time.deltaTime;
+
+            // Jika tinggi mencapai minimum, ubah arah menjadi membesar
+            if (currentHeight <= minHeight)
             {
-                currentYScale = minScale;
+                currentHeight = minHeight;
                 isScalingUp = true;
             }
         }
 
-        // Apply new scale
-        transform.localScale = new Vector3(originalScale.x, currentYScale, originalScale.z);
+        // Terapkan perubahan skala
+        transform.localScale = new Vector3(originalScale.x, currentHeight, originalScale.z);
 
-        // Adjust position to keep bottom fixed
-        float heightDifference = (currentYScale - originalScale.y) / 2;
+        // Sesuaikan posisi agar dasar tembok tetap di tempatnya
+        float heightDifference = (currentHeight - originalScale.y) / 2;
         transform.position = new Vector3(
             originalPosition.x,
             originalPosition.y + heightDifference,
@@ -62,11 +64,12 @@ public class ObstacleMovement : MonoBehaviour
         );
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && gameManager != null)
+        // Jika tembok mengenai player
+        if (collision.gameObject.CompareTag("Player"))
         {
-            gameManager.HandlePlayerHit();
+            GameManager.Instance.HandlePlayerHit(); // Kurangi health player
         }
     }
 }
