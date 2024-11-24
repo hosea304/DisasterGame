@@ -6,11 +6,10 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
 
     [Header("Jump Settings")]
-    [SerializeField] private float jumpForce = 7f;
-    [SerializeField] private float groundCheckDistance = 0.1f;
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float jumpForce = 11f;
 
     private Rigidbody rb;
+    private bool isGrounded;
 
     void Start()
     {
@@ -21,7 +20,7 @@ public class PlayerScript : MonoBehaviour
     {
         Move();
 
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             Jump();
         }
@@ -32,25 +31,30 @@ public class PlayerScript : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         Debug.Log("Horizontal Input: " + horizontalInput); // Debug untuk memastikan input bekerja
 
-        Vector3 moveDirection = new Vector3(horizontalInput, 0, 0) * moveSpeed;
-        rb.velocity = new Vector3(moveDirection.x, rb.velocity.y, rb.velocity.z);
+        Vector3 moveDirection = new Vector3(horizontalInput * moveSpeed, rb.velocity.y, 0);
+        rb.velocity = moveDirection;
     }
 
     private void Jump()
     {
-        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        isGrounded = false;
     }
 
-    private bool IsGrounded()
+    private void OnCollisionEnter(Collision collision)
     {
-        // Memeriksa apakah karakter berada di atas permukaan tanah menggunakan raycast
-        return Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer);
+        if (collision.gameObject.CompareTag("Platform"))
+        {
+            Debug.Log("Character Grounded");
+            isGrounded = true;
+        }
     }
 
-    void OnDrawGizmosSelected()
+    private void OnCollisionExit(Collision collision)
     {
-        // Menampilkan garis untuk mengecek ground saat di editor
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckDistance);
+        if (collision.gameObject.CompareTag("Platform"))
+        {
+            isGrounded = false;
+        }
     }
 }
